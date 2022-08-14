@@ -1,6 +1,5 @@
 package leetcode
 
-import "fmt"
 // @leetup=custom
 // @leetup=info id=36 lang=golang slug=valid-sudoku
 
@@ -117,13 +116,24 @@ func isValidSudoku(board [][]byte) bool {
     return int8(digit), true
   }
 
+  getCell := func(i int, j int) int {
+    g := func(k int) int {
+      if k < 3 {
+        return 0
+      }
+
+      if k > 5 {
+        return 2
+      }
+
+      return 1
+    }
+
+    return 3*g(i) + g(j)
+  }
+
   for i := range board {
     for j, data := range board[i] {
-      c_i := (i % 3) * 3 
-      c_j := j % 3
-      c := c_i + c_j
-
-      fmt.Printf("index is %v,%v and cell is i,j,c %v,%v,%v\n", i, j, c_i, c_j, c)
 
       val, ok := maybeDigit(data)
       if !ok {
@@ -143,8 +153,7 @@ func isValidSudoku(board [][]byte) bool {
 
       colMaps[i][val] = true
 
-
-
+      c := getCell(i, j) 
       
       if cellMaps[c][val] {
         return false
